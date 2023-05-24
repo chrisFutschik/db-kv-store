@@ -1,0 +1,41 @@
+Problem: 
+- The objective of this take-home exercise is to develop a simple disk-backed key-value store, exposed through a REST-ful HTTP interface.
+- The server may be implemented using any language/HTTP framework, as long as the project README explains how to run it. 
+    When you're done, share your source code with us through a public GitHub repo, or by sending us a self-contained .tar.gz/.zip file.
+
+Notes: 
+- Don't worry about extensive documentation or tests, just focus on writing clean code.
+
+Requirements:
+1.	HTTP endpoints:
+    a.	PUT /<key> — Set the value of a key
+    b.	GET /<key> — Fetch the value of a key
+    c.	DELETE /<key> — Delete a key
+2.	The server's database state should be persisted to the file system (without relying in an external process, or using an existing key-value store library).
+3.	Restarting the server should not lose writes that have already been acknowledged with a 2XX response status code.
+4.	Keys will be between 1 and 255 bytes long and will use the ASCII characters a-z,A-Z,0-9.
+5.	Values will be arbitrary byte strings with a maximum length of 1024 bytes.
+
+Try to keep the implementation as simple as possible while keeping the server robust. We are much more concerned with reliability than performance.
+Example requests
+
+These examples assume the HTTP server is running on localhost, port 3000.
+1.	Write a value to the key foo:
+$ curl -i -X PUT 'http://localhost:3000/foo' -H 'Content-Type: application/octet-stream' --data-binary 'hello world!'
+HTTP/1.1 204 No Content
+
+2. Fetch the value of foo:
+$ curl -i 'http://localhost:3000/foo'
+HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+Content-Length: 12
+
+hello world!
+
+3. Fetch the value of qux (which does not exist):
+$ curl -i 'http://localhost:3000/qux'
+HTTP/1.1 404 Not Found
+
+4. Delete the key foo:
+$ curl -i -X DELETE 'http://localhost:3000/foo'
+HTTP/1.1 204 No Content
